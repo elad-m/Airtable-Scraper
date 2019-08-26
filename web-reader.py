@@ -1,17 +1,15 @@
-# import libraries
+# importing an httplib2 and Beautiful Soup packages
+import httplib2
+from bs4 import BeautifulSoup
 
-# from urllib.request import Request, urlopen
-# from urllib.error import URLError, HTTPError
-# from bs4 import BeautifulSoup
-
-
-# specify the url
-quote_page = "http://www.bloomberg.com/quote/SPX:IND"
+# The that is the main goal
 airtable_url = "https://airtable.com/shrl5EIxGUExC3umi/tblvOwxPcPVcFmwxt?blocks=hide"
+
+# Simpler website to practice
 ezurl = "https://www.dragonflycave.com/mechanics/stat-stages"
 
-import httplib2
-from bs4 import BeautifulSoup, SoupStrainer
+
+
 http = httplib2.Http()
 status, response = http.request(ezurl)
 bs = BeautifulSoup(response, "html.parser")
@@ -31,15 +29,9 @@ print(bs.find_all("a"))
 
 
 
-
-
-
-
-
-
-
-
-
+####################################################################################
+#                           Various Tryout Code Snippets                           #
+####################################################################################
 
 # for link in BeautifulSoup(response, parse_only=SoupStrainer('a'), features="html.parser"):
     # if link.has_attr('href'):
