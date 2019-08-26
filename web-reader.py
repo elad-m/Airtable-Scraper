@@ -23,7 +23,7 @@ def find_descendant_with_id(bs_obj, id_str):
 # find_descendant_with_id(bs, "layout")
 
 
-print(bs.find_all("a"))
+print((bs.find("div", {"id": "content"})))
 
 # testing comment
 
