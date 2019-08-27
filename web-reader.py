@@ -9,28 +9,46 @@ airtable_url = "https://airtable.com/shrl5EIxGUExC3umi/tblvOwxPcPVcFmwxt?blocks=
 ezurl = "https://www.dragonflycave.com/mechanics/stat-stages"
 
 
-
-http = httplib2.Http()
-status, response = http.request(ezurl)
-bs = BeautifulSoup(response, "html.parser")
-
-def find_descendant_with_id(bs_obj, id_str):
-    for child in bs_obj.html.descendants:
-        print(child.name)
+def find_parents(tag):
+    counter = 0
+    cur_parent = tag.parent
+    if cur_parent is not None and "id" in cur_parent:
+        print(cur_parent["id"])
+        print("counter", counter)
+    while cur_parent is not None:
+        counter += 1
+        cur_parent = cur_parent.parent
+        if cur_parent is not None and "id" in cur_parent:
+            print(cur_parent["id"])
+        print("counter", counter)
         
-    print("THE END")
+    
+# http = httplib2.Http()
+# status, response = http.request(airtable_url)
+airtable_file  = open("airtable.html")
+bs = BeautifulSoup(airtable_file, "html.parser")
+some_tag = bs.find("div", {"class": "paneInnerContent"})
+print("THE TAG:          \n", some_tag)
+print(find_parents(some_tag))
 
-# find_descendant_with_id(bs, "layout")
 
 
-print((bs.find("div", {"id": "content"})))
+# This is what I used to print the WHOLE tag with id=content on the ezurl
+# it does not work for some reason for the airtable
+# possible solutions are: look for scraping airtable website, or printing the 
+# parents of the paneInnerContent tag
+# print((bs.find("div", {"id": "content"})))
 
-# testing comment
+
 
 
 ####################################################################################
 #                           Various Tryout Code Snippets                           #
 ####################################################################################
+
+
+# The following is a cemetary for failed attempts. Please be respective
+
 
 # for link in BeautifulSoup(response, parse_only=SoupStrainer('a'), features="html.parser"):
     # if link.has_attr('href'):
