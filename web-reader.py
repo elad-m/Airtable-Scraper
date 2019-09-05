@@ -21,15 +21,44 @@ def find_parents(tag):
         if cur_parent is not None and "id" in cur_parent:
             print(cur_parent["id"])
         print("counter", counter)
-        
+  
+# import re
+
+def traverse_tree_to_target_tag(tar_tag, cls, soup):
+    what = soup.find_all("div", {"class": "paneInnerContent"})
+    print(len(what))
+    # cur_child = soup
+    # print(cur_child.name)
     
+    # cur_child = soup.child
+
+
+airtable_file  = open("airtable.html")
+soup = BeautifulSoup(airtable_file, "html.parser")
+if soup.find("div", {"class": "paneInnerContent"}):
+    traverse_tree_to_target_tag("div", "paneInnerContent", soup)
+
+
+
+## an attempt to read line by line until the tag
+# if "paneInnerContent" in airtable_file.read():
+    # airtable_file.seek(0)
+    # line = airtable_file.readline()
+    # print("line: ", line)
+# else:
+    # pass
+
+
+
+  
+## an attempt to print the target tag's parents names/ids    
 # http = httplib2.Http()
 # status, response = http.request(airtable_url)
-airtable_file  = open("airtable.html")
-bs = BeautifulSoup(airtable_file, "html.parser")
-some_tag = bs.find("div", {"class": "paneInnerContent"})
-print("THE TAG:          \n", some_tag)
-print(find_parents(some_tag))
+# airtable_file  = open("airtable.html")
+# bs = BeautifulSoup(airtable_file, "html.parser")
+# some_tag = bs.find("div", {"class": "paneInnerContent"})
+# print("THE TAG:          \n", some_tag)
+# print(find_parents(some_tag))
 
 
 
