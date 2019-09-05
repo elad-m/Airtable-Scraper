@@ -16,5 +16,4 @@ If I understand correctly how a websites and scrapers work these are the steps f
   
   
 Comments:
-  1. Regarding the first step, for now I try to keep it simple by only getting the addresses, and not by clicking the job, since mouse      clicking add another element (but will be done in the future). The addresses are specific for a job opening anyway.
- 
+  1.  I have finally understood that the "data-part" on the website is not there unless the user does some kind of an event. Now I am looking into what this event exactly is (mouse scroll/hover/click?) and how to simulate this event with Selenium's python "chromedriver".
