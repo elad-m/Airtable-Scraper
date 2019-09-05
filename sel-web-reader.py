@@ -6,6 +6,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from selenium.webdriver.common.touch_actions import TouchActions
+
 import sys
 
 
@@ -20,8 +22,12 @@ try:
     element = WebDriverWait(browser, 10).until(EC.presence_of_element_located
     ((By.CLASS_NAME, "url")))
     list_of_obj = browser.find_elements_by_class_name("url")
-    print(list_of_obj[0].text)
-    
+    print(len(list_of_obj))
+    first_element = list_of_obj[0] # this is a webelement type
+    TouchActions(browser).scroll_from_element(first_element, 64, 0)
+   
+    list_of_obj = browser.find_elements_by_class_name("url")
+    print(len(list_of_obj))
     
     
     
@@ -29,18 +35,17 @@ try:
 
     
 except Exception:
-    print("there was an exception:", sys.exc_info()[0], sys.exc_info()[1],
-    sys.exc_info()[2])
+    print("there was an exception:", 
+    sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
     
  
 browser.quit()
 
 
+# print(some_str + "transform: translated3d(0px, , 0px);")
+
+  # js = "return document.getElementsByClassName('paneInnerContent')[3].getAttribute('style');"
     
-#example 1
-# from selenium.webdriver.common.keys import Keys
-
-# assert 'Yahoo' in browser.title
-
-# elem = browser.find_element_by_name('p')  # Find the search box
-# elem.send_keys('seleniumhq' + Keys.RETURN)
+    # some_str = browser.execute_script(js) 
+    # for i in range(len(list_of_obj)):
+        # print(list_of_obj[i].text)

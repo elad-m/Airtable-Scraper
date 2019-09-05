@@ -4,3 +4,9 @@ static.airtable.com/js/lib/regenerator-runtime.min.js
 static.airtable.com/js/lib/jquery/2.1.4/jquery.min.js
                                  /jquesry-ui-1.11.4.custom.mod4.min.js
 https://cdnjs.cloudflare.com/ajax/libs/rollbar.js/1.9.0/rollbar.nojson.min.js
+
+
+id=scrollOverlay
+
+class=antiscroll-wrap antiscroll-inner antiscroll-scrollbar 
+antiscroll-scrollbar-horizontal antiscroll-scrollbar-shown
