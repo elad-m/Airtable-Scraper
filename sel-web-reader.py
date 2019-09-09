@@ -21,15 +21,15 @@ try:
     # browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
     element = WebDriverWait(browser, 10).until(EC.presence_of_element_located
-    ((By.CLASS_NAME, "url")))
-    
+    ((By.CLASS_NAME, "antiscroll-scrollbar")))
+    browser.maximize_window()
     list_of_obj = browser.find_elements_by_class_name("url")
     print(len(list_of_obj))
     
-    first_element = list_of_obj[0] # this is a webelement type
-    touch_actions_obj = TouchActions(browser)
-    touch_actions_obj.scroll_from_element(first_element, -92, 92).perform() # range:
-    # touch_actions_obj.perform()
+    scrollbar_style = browser.find_element_by_class_name(
+    "antiscroll-scrollbar-vertical").get_attribute("style")
+    print(scrollbar_style)
+    
     
     list_of_obj = browser.find_elements_by_class_name("url")
     print(len(list_of_obj))
