@@ -18,17 +18,25 @@ browser  = webdriver.Chrome(chrome_options=options, executable_path=r"C:\Users\E
 browser.get("https://airtable.com/shrl5EIxGUExC3umi/tblvOwxPcPVcFmwxt?blocks=hide")
 
 try:
+    # browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
     element = WebDriverWait(browser, 10).until(EC.presence_of_element_located
     ((By.CLASS_NAME, "url")))
-    list_of_obj = browser.find_elements_by_class_name("url")
-    print(len(list_of_obj))
-    first_element = list_of_obj[0] # this is a webelement type
-    TouchActions(browser).scroll_from_element(first_element, 64, 0)
-   
+    
     list_of_obj = browser.find_elements_by_class_name("url")
     print(len(list_of_obj))
     
+    first_element = list_of_obj[0] # this is a webelement type
+    touch_actions_obj = TouchActions(browser)
+    touch_actions_obj.scroll_from_element(first_element, -92, 92).perform() # range:
+    # touch_actions_obj.perform()
+    
+    list_of_obj = browser.find_elements_by_class_name("url")
+    print(len(list_of_obj))
+    
+    
+    ## i think scrolling need to use touch and that might not be allowed
+    ## in this site?
     
     
     
