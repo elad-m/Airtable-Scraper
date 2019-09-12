@@ -10,6 +10,8 @@ from selenium.webdriver.common.touch_actions import TouchActions
 from selenium.webdriver.common.action_chains import ActionChains
 import sys
 
+import time
+
 
 options = Options()  # this is here because it didn't work the easy way
 options.binary_location = "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
@@ -20,14 +22,22 @@ driver.get("https://airtable.com/shrl5EIxGUExC3umi/tblvOwxPcPVcFmwxt?blocks=hide
 try:
     
     driver.maximize_window()
-    for px_to_scroll in range(0, 383, 9):
-        # wait for scrollbar and scroll by px_to_scroll
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located
-                                       ((By.CLASS_NAME, "antiscroll-scrollbar-vertical")))
-        # scrollbar = driver.find_element_by_class_name("antiscroll-scrollbar-vertical")
-        ActionChains(driver).move_to_element(driver.find_element_by_class_name("antiscroll-scrollbar-vertical")
-               ).drag_and_drop_by_offset(driver.find_element_by_class_name(
-               "antiscroll-scrollbar-vertical"), 0, px_to_scroll).perform()
+    px_to_scroll = 8
+    for i in range(42):  # 42 scrolling for 9px scroll for a 383px scroll bar
+        if i != 0:  # not scrolling the first time
+            # wait for scrollbar and scroll by px_to_scroll
+            WebDriverWait(driver, 10, 0.3).until(EC.presence_of_element_located
+                                           ((By.CLASS_NAME, "antiscroll-scrollbar-vertical")))
+            
+            # start_time = time.time()
+            # WebDriverWait(driver, 50, 0.3).until(EC.staleness_of(scrollbar))
+            # end_time = time.time()
+            # print("time: ", end_time - start_time)
+            actions = ActionChains(driver)
+            scrollbar = driver.find_element_by_class_name("antiscroll-scrollbar-vertical")
+            actions.move_to_element(driver.find_element_by_class_name("antiscroll-scrollbar-vertical"))
+            actions.drag_and_drop_by_offset(driver.find_element_by_class_name(
+                   "antiscroll-scrollbar-vertical"), 0, px_to_scroll).perform()
     
         
         WebDriverWait(driver, 10).until(EC.presence_of_element_located
@@ -35,17 +45,21 @@ try:
         list_of_obj = driver.find_elements_by_class_name("numberText")
         row_num_string = ""
         for i in range(len(list_of_obj)):
-            row_num_string += list_of_obj[i].text + ", "
+            curr_elem = list_of_obj[i]
+            if curr_elem.is_displayed():
+                row_num_string += curr_elem.text + ", "
         print(row_num_string, "END")
         # print("len: ", len(list_of_obj))
        
         driver.refresh()
     
-    ## TODO: handle the moveTargetOutOfBound exception
-    ## write to a new file that deletes the previous
-    ## write the urls  and not the numbers
+    ## problems:
+    ## -stale element happens on a whim apparently, maybe internet connection? non-deterministic
+    ## -still scrolling too much - a lot of jobs missing.
+    ## -not able to scroll the page for trials using js console: 
     
-
+    # document.getElementsByClassName('antiscroll-scrollbar-vertical')[0].style.transform = "translate3d(0, 9, 0)";
+# "translate3d(0, 9, 0)"
     
 except Exception:
     print("there was an exception:", 
