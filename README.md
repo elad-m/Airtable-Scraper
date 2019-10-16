@@ -8,7 +8,7 @@ The Scraper: Selenium for Python
 
 
 STEPS:
-  1. Find and collect the data part in the website, specifically the addresses of the companies.
+  1. Find and collect the data part in the website. More specifically, the URLs of the positions of the companies (all urls of all table rows).
   2. Visit each web address and look for these keywords: "Student", "Part-Time" and "Intern"
   
   
