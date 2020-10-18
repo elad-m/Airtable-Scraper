@@ -11,6 +11,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import sys
 import csv
 
+
 class RowsDict:
     """
     A dictionary of row numbers to pairs of row numbers and urls
@@ -31,7 +32,9 @@ class RowsDict:
         row_num_to_add = pair_to_add[0]
         curr_size = self.get_size()
         if row_num_to_add != 1:
-            assert self._row_dict[curr_size][0] == row_num_to_add - 1, "not the next line"  ## to say: this is not the next line number
+            # to say: this is not the next line number
+            assert self._row_dict[curr_size][0] == row_num_to_add - \
+                1, "not the next line"
 
         self._row_dict[row_num_to_add] = pair_to_add
         self._size = len(self.get_dict())
@@ -49,7 +52,7 @@ class RowsDict:
         for i in range(start, end, 1):
             print_str += str(self._row_dict[i])
         print(print_str)
-        
+
 
 def unit_test_row_dict():
     # test init - attribute
@@ -69,27 +72,30 @@ def unit_test_row_dict():
     # test add a line that is NOT next
     # p5 = (5, "hey")
     # a.add(p5)
-    list_of_pairs = list(zip([i for i in range(3, 13)], ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]))
+    list_of_pairs = list(zip([i for i in range(3, 13)], [
+                         "a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]))
     for j in range(0, 10):
         a.add(list_of_pairs[j])
     a.print_dict()
     print(a.get_dict()[11])
 
 
-
 def get_chrome_web_driver(binary_location, executable_path_str, web_url):
     options = Options()  # this is here because it didn't work the easy way
     options.binary_location = binary_location
     options.add_argument("--disable-infobars --disable-extensions")
-    driver  = webdriver.Chrome(chrome_options=options, executable_path=executable_path_str, )
+    driver = webdriver.Chrome(chrome_options=options,
+                              executable_path=executable_path_str, )
     driver.get(web_url)
     return driver
 
 
 def get_num_of_records(driver):
+    class_name_of_webelement_of_num_of_row = "selectionCount"
     WebDriverWait(driver, 10, 0.3).until(EC.presence_of_element_located
-                                           ((By.CLASS_NAME, "summaryCell")))
-    summary_cell_webelement = driver.find_element_by_class_name("summaryCell")
+                                         ((By.CLASS_NAME, class_name_of_webelement_of_num_of_row)))
+    summary_cell_webelement = driver.find_element_by_class_name(
+        class_name_of_webelement_of_num_of_row)
     return int(summary_cell_webelement.text.split()[0])
 
 
@@ -102,44 +108,48 @@ def move_down_one_row(driver, row_webelement, row_num):
         actions = ActionChains(driver)
         actions.send_keys(keys.Keys.ARROW_DOWN).perform()
 
+
 def get_row_url(driver, row_num, rows_dict_object):
     if row_num == 1:
-        search_keyword = 'firstRow'
+        search_keyword = 'dataRow'
     else:
         search_keyword = 'cursorCell'
     try:
-        condition = EC.presence_of_element_located((By.CLASS_NAME, search_keyword))
+        condition = EC.presence_of_element_located(
+            (By.CLASS_NAME, search_keyword))
         WebDriverWait(driver, 7, 0.1).until(condition)
         row_webelement = driver.find_element_by_class_name(search_keyword)
         assert row_webelement is not None, "Could not get the row"
-        
+
         row_id = row_webelement.get_attribute("data-rowid")
         css_selector_str = ".dataRow.rightPane[data-rowid='" + row_id + "']"
-        entire_right_pane_row = driver.find_element_by_css_selector(css_selector_str)
+        entire_right_pane_row = driver.find_element_by_css_selector(
+            css_selector_str)
         row_url = entire_right_pane_row.find_element_by_css_selector(".url")
         assert row_url is not None, "Could not get URL of row"
         # print("Row pair: ", "(" + str(row_num)+ ", " + row_url.text + ")")
         rows_dict_object.add((row_num, row_url.text))
-        
+
         move_down_one_row(driver, row_webelement, row_num)
-        
+
     except Exception:
-        print("There was an exception:", 
-              sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2], 
+        print("There was an exception:",
+              sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2],
               "LINE: ", sys.exc_info()[2].tb_lineno)
         raise
-    
-    
+
+
 def main():
-    
+
+    local_chromedriver_address = r"C:\Users\Elad\AppData\Local\chromedriver\chromedriver.exe"
     driver = get_chrome_web_driver("C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
-                                    r"C:\Users\Elad\AppData\Local\chromedriver\chromedriver.exe",
-                                    "https://airtable.com/shrl5EIxGUExC3umi/tblvOwxPcPVcFmwxt?blocks=hide")
+                                   local_chromedriver_address,
+                                   "https://airtable.com/shrl5EIxGUExC3umi/tblvOwxPcPVcFmwxt?blocks=hide")
     try:
         driver.maximize_window()
-        num_of_records = get_num_of_records(driver) ## change later
+        num_of_records = get_num_of_records(driver)
         rows_dict_object = RowsDict()
-               
+
         for row_num in range(1, num_of_records + 1):
             get_row_url(driver, row_num, rows_dict_object)
             if row_num % 10 == 0:
@@ -150,18 +160,15 @@ def main():
         for key, val in rows_dict_object.get_dict().items():
             w.writerow([key, val])
         f.close()
-        
+
     except Exception:
-        print("there was an exception:", 
-              sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2], 
+        print("there was an exception:",
+              sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2],
               "LINE: ", sys.exc_info()[2].tb_lineno)
-    
+
     driver.quit()
-    
 
 
-if __name__== "__main__":
+if __name__ == "__main__":
     # unit_test_row_dict()
     main()
-
- 
